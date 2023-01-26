@@ -6,19 +6,13 @@ import (
 	"fmt"
 )
 
-// import (
-//
-//	"context"
-//	"database/sql"
-//	"fmt"
-//
-// )
-//
-//	type Store interface {
-//		//Querier
-//		TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error)
-//		CreateUserTx(ctx context.Context, arg CreateUserTxParams) (CreateUserTxResult, error)
-//	}
+// Store defines all functions to execute db queries and transactions
+type Store interface {
+	Querier
+	TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error)
+	//CreateUserTx(ctx context.Context, arg CreateUserTxParams) (CreateUserTxResult, error)
+}
+
 type SQLStore struct {
 	*Queries
 	db *sql.DB
