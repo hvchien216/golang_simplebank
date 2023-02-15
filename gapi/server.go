@@ -7,18 +7,20 @@ import (
 	"simple_bank/pb"
 	"simple_bank/token"
 	"simple_bank/utils"
+	"simple_bank/worker"
 )
 
 type Server struct {
 	pb.UnimplementedSimpleBankServer
-	config     utils.Config
-	store      db.Store
-	tokenMaker token.Maker
-	router     *gin.Engine
+	config          utils.Config
+	store           db.Store
+	tokenMaker      token.Maker
+	router          *gin.Engine
+	taskDistributor worker.TaskDistributor
 }
 
 // NewServer creates a new gRPC server
-func NewServer(config utils.Config, store db.Store) (*Server, error) {
+func NewServer(config utils.Config, store db.Store, taskDistributor worker.TaskDistributor) (*Server, error) {
 	tokenMarker, err := token.NewPasetoMaker(config.TokenSymmetricKey)
 
 	if err != nil {
@@ -26,9 +28,10 @@ func NewServer(config utils.Config, store db.Store) (*Server, error) {
 	}
 
 	server := &Server{
-		config:     config,
-		store:      store,
-		tokenMaker: tokenMarker,
+		config:          config,
+		store:           store,
+		tokenMaker:      tokenMarker,
+		taskDistributor: taskDistributor,
 	}
 
 	return server, nil
